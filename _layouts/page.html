@@ -14,6 +14,15 @@ layout: default
     <div class="content">
       {{ content }}
     </div>
+
+    {# **** 카테고리 페이지에만 JS 삽입 (수정된 부분) **** #}
+    {% if page.url contains '/categories/' %}
+      <script>
+        {% include js/category-view-loader.js %}
+      </script>
+    {% endif %}
+    {# *********************************************** #}
+    
   {% else %}
     {{ content }}
   {% endif %}

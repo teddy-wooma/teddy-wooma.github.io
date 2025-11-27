@@ -1,6 +1,9 @@
-// 파일 경로: _includes/js/category-view-loader.js
+// 파일 경로: _includes/js/category-view-loader.js 내용 전체
 
-document.addEventListener('DOMContentLoaded', () => {
+(function() {
+    'use strict'; 
+
+    // 모든 이벤트 리스너 제거, 즉시 실행
     const container = document.getElementById('category-container');
     const listViewBtn = document.getElementById('list-view-btn');
     const gridViewBtn = document.getElementById('grid-view-btn');
@@ -31,4 +34,4 @@ document.addEventListener('DOMContentLoaded', () => {
         listViewBtn.addEventListener('click', () => setView('list'));
         gridViewBtn.addEventListener('click', () => setView('grid'));
     }
-});
+})();
