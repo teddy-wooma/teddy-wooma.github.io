@@ -1,22 +1,37 @@
 ---
 layout: page
-# All the Tags of posts.
+# All the Tags of posts, grouped by Category.
 ---
 
-<div id="tags" class="d-flex flex-wrap mx-xl-2">
-  {% assign tags = '' | split: '' %}
-  {% for t in site.tags %}
-    {% assign tags = tags | push: t[0] %}
-  {% endfor %}
+{% include lang.html %}
 
-  {% assign sorted_tags = tags | sort_natural %}
+<div id="tags-grouped">
 
-  {% for t in sorted_tags %}
-    <div>
-      <a class="tag" href="{{ t | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}">
-        {{ t -}}
-        <span class="text-muted">{{ site.tags[t].size }}</span>
-      </a>
+  {% for category in site.categories %}
+    
+    <h2 class="category-header mt-4 mb-3 ps-lg-2">
+      <i class="fa fa-folder-open fa-fw text-muted"></i>
+      {{ category[0] }} <span class="lead text-muted ps-2">{{ category[1] | size }}</span> </h2>
+
+    <div class="d-flex flex-wrap mx-xl-2">
+      {% assign tags_in_category = "" | split: "" %}
+      
+      {% for post in category[1] %}
+        {% assign tags_in_category = tags_in_category | concat: post.tags | uniq %}
+      {% endfor %}
+
+      {% assign sorted_tags_in_category = tags_in_category | sort_natural %}
+      
+      {% for tag_name in sorted_tags_in_category %}
+        <div>
+          <a class="tag" href="{{ tag_name | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}">
+            {{ tag_name -}}
+            <span class="text-muted">{{ site.tags[tag_name].size }}</span>
+          </a>
+        </div>
+      {% endfor %}
+      
     </div>
   {% endfor %}
+
 </div>

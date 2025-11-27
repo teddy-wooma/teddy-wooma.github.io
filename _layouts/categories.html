@@ -5,7 +5,48 @@ layout: page
 
 {% include lang.html %}
 
-{% assign HEAD_PREFIX = 'h_' %}
+<style>
+/* 1. 그리드 뷰 스타일 */
+#category-container.grid-view {
+  display: grid;
+  /* 데스크톱: 3열, 태블릿: 2열. Bootstrap의 반응형 너비와 유사하게 설정 */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+  gap: 1.5rem; /* 그리드 간격 */
+}
+
+/* 그리드 뷰일 때 카테고리 항목 스타일 */
+#category-container.grid-view .category-item {
+  width: 100%; /* 그리드 셀에 꽉 차도록 */
+  margin-bottom: 0 !important; /* 기존 세로 마진 제거 */
+}
+
+/* 일자형 뷰 스타일 (기존과 유사) */
+#category-container.list-view .category-item {
+  margin-bottom: 1rem; /* 원래의 리스트 간격 */
+}
+
+/* 리스트 뷰일 때는 그리드 속성 제거 */
+#category-container.list-view {
+  display: block;
+}
+
+/* 카테고리 카드 내부 높이 통일 */
+.card.categories {
+    height: 100%; /* 그리드 보기에서 높이 통일 */
+}
+</style>
+<div class="d-flex justify-content-end mb-3">
+  
+  <div class="btn-group" role="group" aria-label="View toggle">
+    <button type="button" class="btn btn-sm btn-outline-secondary active" id="list-view-btn" data-view="list" title="일자형 보기">
+      <i class="fas fa-list-ul"></i>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary" id="grid-view-btn" data-view="grid" title="그리드 보기">
+      <i class="fas fa-th-large"></i>
+    </button>
+  </div>
+</div>
+<div id="category-container" class="list-view"> {% assign HEAD_PREFIX = 'h_' %}
 {% assign LIST_PREFIX = 'l_' %}
 
 {% assign group_index = 0 %}
@@ -32,107 +73,130 @@ layout: page
     {% assign sub_categories = sub_categories | sort %}
     {% assign sub_categories_size = sub_categories | size %}
 
-    <div class="card categories">
-      <!-- top-category -->
-      <div
-        id="{{ HEAD_PREFIX }}{{ group_index }}"
-        class="card-header d-flex justify-content-between hide-border-bottom"
-      >
-        <span class="ms-2">
-          <i class="far fa-folder{% if sub_categories_size > 0 %}-open{% endif %} fa-fw"></i>
+    <div class="category-item"> <div class="card categories h-100"> <div
+          id="{{ HEAD_PREFIX }}{{ group_index }}"
+          class="card-header d-flex justify-content-between hide-border-bottom"
+        >
+          <span class="ms-2">
+            <i class="far fa-folder{% if sub_categories_size > 0 %}-open{% endif %} fa-fw"></i>
 
-          {% capture _category_url %}/categories/{{ category_name | slugify | url_encode }}/{% endcapture %}
-          <a href="{{ _category_url | relative_url }}" class="mx-2">{{ category_name }}</a>
+            {% capture _category_url %}/categories/{{ category_name | slugify | url_encode }}/{% endcapture %}
+            <a href="{{ _category_url | relative_url }}" class="mx-2">{{ category_name }}</a>
 
-          <!-- content count -->
-          {% assign top_posts_size = site.categories[category_name] | size %}
-          <span class="text-muted small font-weight-light">
-            {% if sub_categories_size > 0 %}
-              {{ sub_categories_size }}
-              {% if sub_categories_size > 1 %}
+            {% assign top_posts_size = site.categories[category_name] | size %}
+            <span class="text-muted small font-weight-light">
+              {% if sub_categories_size > 0 %}
+                {{ sub_categories_size }}
+                {% if sub_categories_size > 1 %}
+                  {{
+                    site.data.locales[lang].categories.category_measure.plural
+                    | default: site.data.locales[lang].categories.category_measure
+                  }}
+                {% else %}
+                  {{
+                    site.data.locales[lang].categories.category_measure.singular
+                    | default: site.data.locales[lang].categories.category_measure
+                  }}
+                {% endif -%}
+                ,
+              {% endif %}
+
+              {{ top_posts_size }}
+
+              {% if top_posts_size > 1 %}
                 {{
-                  site.data.locales[lang].categories.category_measure.plural
-                  | default: site.data.locales[lang].categories.category_measure
+                  site.data.locales[lang].categories.post_measure.plural
+                  | default: site.data.locales[lang].categories.post_measure
                 }}
               {% else %}
                 {{
-                  site.data.locales[lang].categories.category_measure.singular
-                  | default: site.data.locales[lang].categories.category_measure
+                  site.data.locales[lang].categories.post_measure.singular
+                  | default: site.data.locales[lang].categories.post_measure
                 }}
-              {% endif -%}
-              ,
-            {% endif %}
-
-            {{ top_posts_size }}
-
-            {% if top_posts_size > 1 %}
-              {{
-                site.data.locales[lang].categories.post_measure.plural
-                | default: site.data.locales[lang].categories.post_measure
-              }}
-            {% else %}
-              {{
-                site.data.locales[lang].categories.post_measure.singular
-                | default: site.data.locales[lang].categories.post_measure
-              }}
-            {% endif %}
+              {% endif %}
+            </span>
           </span>
-        </span>
 
-        <!-- arrow -->
+          {% if sub_categories_size > 0 %}
+            <a
+              href="#{{ LIST_PREFIX }}{{ group_index }}"
+              data-bs-toggle="collapse"
+              aria-expanded="true"
+              aria-label="{{ HEAD_PREFIX }}{{ group_index }}-trigger"
+              class="category-trigger hide-border-bottom"
+            >
+              <i class="fas fa-fw fa-angle-down"></i>
+            </a>
+          {% else %}
+            <span data-bs-toggle="collapse" class="category-trigger hide-border-bottom disabled">
+              <i class="fas fa-fw fa-angle-right"></i>
+            </span>
+          {% endif %}
+        </div>
         {% if sub_categories_size > 0 %}
-          <a
-            href="#{{ LIST_PREFIX }}{{ group_index }}"
-            data-bs-toggle="collapse"
-            aria-expanded="true"
-            aria-label="{{ HEAD_PREFIX }}{{ group_index }}-trigger"
-            class="category-trigger hide-border-bottom"
-          >
-            <i class="fas fa-fw fa-angle-down"></i>
-          </a>
-        {% else %}
-          <span data-bs-toggle="collapse" class="category-trigger hide-border-bottom disabled">
-            <i class="fas fa-fw fa-angle-right"></i>
-          </span>
+          <div id="{{ LIST_PREFIX }}{{ group_index }}" class="collapse show" aria-expanded="true">
+            <ul class="list-group">
+              {% for sub_category in sub_categories %}
+                <li class="list-group-item">
+                  <i class="far fa-folder fa-fw"></i>
+
+                  {% capture _sub_ctg_url %}/categories/{{ sub_category | slugify | url_encode }}/{% endcapture %}
+                  <a href="{{ _sub_ctg_url | relative_url }}" class="mx-2">{{ sub_category }}</a>
+
+                  {% assign posts_size = site.categories[sub_category] | size %}
+                  <span class="text-muted small font-weight-light">
+                    {{ posts_size }}
+
+                    {% if posts_size > 1 %}
+                      {{
+                        site.data.locales[lang].categories.post_measure.plural
+                        | default: site.data.locales[lang].categories.post_measure
+                      }}
+                    {% else %}
+                      {{
+                        site.data.locales[lang].categories.post_measure.singular
+                        | default: site.data.locales[lang].categories.post_measure
+                      }}
+                    {% endif %}
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
         {% endif %}
       </div>
-      <!-- .card-header -->
-
-      <!-- Sub-categories -->
-      {% if sub_categories_size > 0 %}
-        <div id="{{ LIST_PREFIX }}{{ group_index }}" class="collapse show" aria-expanded="true">
-          <ul class="list-group">
-            {% for sub_category in sub_categories %}
-              <li class="list-group-item">
-                <i class="far fa-folder fa-fw"></i>
-
-                {% capture _sub_ctg_url %}/categories/{{ sub_category | slugify | url_encode }}/{% endcapture %}
-                <a href="{{ _sub_ctg_url | relative_url }}" class="mx-2">{{ sub_category }}</a>
-
-                {% assign posts_size = site.categories[sub_category] | size %}
-                <span class="text-muted small font-weight-light">
-                  {{ posts_size }}
-
-                  {% if posts_size > 1 %}
-                    {{
-                      site.data.locales[lang].categories.post_measure.plural
-                      | default: site.data.locales[lang].categories.post_measure
-                    }}
-                  {% else %}
-                    {{
-                      site.data.locales[lang].categories.post_measure.singular
-                      | default: site.data.locales[lang].categories.post_measure
-                    }}
-                  {% endif %}
-                </span>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
     </div>
-    <!-- .card -->
-
     {% assign group_index = group_index | plus: 1 %}
   {% endif %}
 {% endfor %}
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('category-container');
+    const listViewBtn = document.getElementById('list-view-btn');
+    const gridViewBtn = document.getElementById('grid-view-btn');
+
+    // ** 1. 보기 전환 로직 **
+    function setView(view) {
+        if (view === 'grid') {
+            container.classList.remove('list-view');
+            container.classList.add('grid-view');
+            listViewBtn.classList.remove('active');
+            gridViewBtn.classList.add('active');
+        } else {
+            container.classList.remove('grid-view');
+            container.classList.add('list-view');
+            listViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+        }
+        localStorage.setItem('categoryView', view); // 선택 저장
+    }
+
+    // 로컬 저장소에서 마지막 보기 설정 불러오기
+    const savedView = localStorage.getItem('categoryView') || 'list';
+    setView(savedView);
+
+    listViewBtn.addEventListener('click', () => setView('list'));
+    gridViewBtn.addEventListener('click', () => setView('grid'));
+});
+</script>
