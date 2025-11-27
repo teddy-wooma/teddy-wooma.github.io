@@ -9,20 +9,20 @@ layout: page
 /* 1. 그리드 뷰 스타일 */
 #category-container.grid-view {
   display: grid;
-  /* 데스크톱: 3열, 태블릿: 2열. Bootstrap의 반응형 너비와 유사하게 설정 */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-  gap: 1.5rem; /* 그리드 간격 */
+  /* 1920x1080에서 3열을 확보하기 위해 최소 너비를 250px로 조정 */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 1.5rem; 
 }
 
 /* 그리드 뷰일 때 카테고리 항목 스타일 */
 #category-container.grid-view .category-item {
-  width: 100%; /* 그리드 셀에 꽉 차도록 */
-  margin-bottom: 0 !important; /* 기존 세로 마진 제거 */
+  width: 100%;
+  margin-bottom: 0 !important;
 }
 
-/* 일자형 뷰 스타일 (기존과 유사) */
+/* 일자형 뷰 스타일 */
 #category-container.list-view .category-item {
-  margin-bottom: 1rem; /* 원래의 리스트 간격 */
+  margin-bottom: 1rem;
 }
 
 /* 리스트 뷰일 때는 그리드 속성 제거 */
@@ -32,7 +32,7 @@ layout: page
 
 /* 카테고리 카드 내부 높이 통일 */
 .card.categories {
-    height: 100%; /* 그리드 보기에서 높이 통일 */
+    height: 100%;
 }
 </style>
 <div class="d-flex justify-content-end mb-3">
@@ -73,7 +73,8 @@ layout: page
     {% assign sub_categories = sub_categories | sort %}
     {% assign sub_categories_size = sub_categories | size %}
 
-    <div class="category-item"> <div class="card categories h-100"> <div
+    <div class="category-item"> <div class="card categories h-100"> 
+        <div
           id="{{ HEAD_PREFIX }}{{ group_index }}"
           class="card-header d-flex justify-content-between hide-border-bottom"
         >
@@ -189,7 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
             listViewBtn.classList.add('active');
             gridViewBtn.classList.remove('active');
         }
-        localStorage.setItem('categoryView', view); // 선택 저장
+        // 로컬 저장소를 사용하여 선택 상태 유지
+        localStorage.setItem('categoryView', view); 
     }
 
     // 로컬 저장소에서 마지막 보기 설정 불러오기
