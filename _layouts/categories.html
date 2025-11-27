@@ -9,7 +9,6 @@ layout: page
 /* 1. 그리드 뷰 스타일 */
 #category-container.grid-view {
   display: grid;
-  /* 1920x1080에서 3열을 확보하기 위해 최소 너비를 250px로 조정 */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
   gap: 1.5rem; 
 }
@@ -20,7 +19,7 @@ layout: page
   margin-bottom: 0 !important;
 }
 
-/* 일자형 뷰 스타일 */
+/* 2. 일자형 뷰 스타일 (토글 시 적용됨) */
 #category-container.list-view .category-item {
   margin-bottom: 1rem;
 }
@@ -38,15 +37,15 @@ layout: page
 <div class="d-flex justify-content-end mb-3">
   
   <div class="btn-group" role="group" aria-label="View toggle">
-    <button type="button" class="btn btn-sm btn-outline-secondary active" id="list-view-btn" data-view="list" title="일자형 보기">
+    <button type="button" class="btn btn-sm btn-outline-secondary" id="list-view-btn" data-view="list" title="일자형 보기">
       <i class="fas fa-list-ul"></i>
     </button>
-    <button type="button" class="btn btn-sm btn-outline-secondary" id="grid-view-btn" data-view="grid" title="그리드 보기">
+    <button type="button" class="btn btn-sm btn-outline-secondary active" id="grid-view-btn" data-view="grid" title="그리드 보기">
       <i class="fas fa-th-large"></i>
     </button>
   </div>
 </div>
-<div id="category-container" class="list-view"> {% assign HEAD_PREFIX = 'h_' %}
+<div id="category-container" class="grid-view"> {% assign HEAD_PREFIX = 'h_' %}
 {% assign LIST_PREFIX = 'l_' %}
 
 {% assign group_index = 0 %}
@@ -73,7 +72,8 @@ layout: page
     {% assign sub_categories = sub_categories | sort %}
     {% assign sub_categories_size = sub_categories | size %}
 
-    <div class="category-item"> <div class="card categories h-100"> 
+    <div class="category-item">
+      <div class="card categories h-100"> 
         <div
           id="{{ HEAD_PREFIX }}{{ group_index }}"
           class="card-header d-flex justify-content-between hide-border-bottom"

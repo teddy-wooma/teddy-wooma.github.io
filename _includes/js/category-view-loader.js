@@ -3,15 +3,12 @@
 (function() {
     'use strict'; 
 
-    // 모든 이벤트 리스너 제거, 즉시 실행
     const container = document.getElementById('category-container');
     const listViewBtn = document.getElementById('list-view-btn');
     const gridViewBtn = document.getElementById('grid-view-btn');
 
-    // 요소들이 모두 존재할 때만 로직을 실행하도록 최종 확인
     if (container && listViewBtn && gridViewBtn) {
         
-        // ** 보기 전환 로직 **
         function setView(view) {
             if (view === 'grid') {
                 container.classList.remove('list-view');
@@ -28,7 +25,8 @@
         }
 
         // 로컬 저장소에서 마지막 보기 설정 불러오기
-        const savedView = localStorage.getItem('categoryView') || 'list';
+        // *** 여기가 'list'에서 'grid'로 변경되었습니다. ***
+        const savedView = localStorage.getItem('categoryView') || 'grid'; 
         setView(savedView);
 
         listViewBtn.addEventListener('click', () => setView('list'));
