@@ -26,7 +26,7 @@ order: 4
       <div class="card h-100 border-success">
         <div class="card-body">
           <h4 class="fw-bold card-title" style="position: relative; padding-left: 2em;">
-            Azure Network Engineer Associate (AZ-700)
+            Azure Network Engineer <br> Associate (AZ-700)
             <img src="/assets/img/az-badge.svg" alt="Azure 자격증 배지" style="height: 1.5em; position: absolute; left: 0; vertical-align: middle; top: 0.5em;">
           </h4>
           
@@ -53,7 +53,7 @@ order: 4
       <div class="card h-100 border-success">
         <div class="card-body">
           <h4 class="fw-bold card-title" style="position: relative; padding-left: 2em;">
-            Azure Developer Associate (AZ-204)
+            Azure Developer Associate <br> (AZ-204)
             <img src="/assets/img/az-badge.svg" alt="Azure 자격증 배지" style="height: 1.5em; position: absolute; left: 0; vertical-align: middle; top: 0.5em;">
           </h4>
           
